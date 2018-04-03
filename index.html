@@ -1,0 +1,74 @@
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Sankey Diagramm</title>
+	<style>
+		svg{
+			//background-color:black;
+		}
+		.node {
+			//fill-opacity: 0.3;
+		}
+		
+		.center, .pCI, .pCO {
+			fill: #CEECF5;
+			stroke: #2ECCFA;
+			stroke-width : 0.5px;
+		}
+		
+		.pCI, .pCO, .pI, .pO{
+			fill-opacity: 0.0;
+		}
+		
+		.in, .pI{
+			fill: #E0F8E0;
+			stroke: #01DF01;
+			stroke-width : 0.5px;
+		}
+		
+		.pathin{
+			fill:none;
+			stroke: #01DF01;
+			opacity:0.3;
+			stroke-width : 30.0px;
+		}
+		
+		.out, .pO{
+			fill: #F8E0E0;
+			stroke: #FE642E;
+			stroke-width : 0.5px;
+		}
+		
+		.pathout{
+			fill: none;
+			stroke: #FE642E;
+			opacity:0.3;
+			stroke-width : 30.0px;
+		}
+		
+		.label, .outPortLabel, .inPortLabel, .weightLabel{
+			font-size: 16px;
+			fill: #000;
+			font-family: Arial;
+			font-weight: bold;
+		}
+		
+		#in{
+			fill:#01DF01;
+		}
+		
+		#out{
+			fill:#FE642E;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="d3.v4.min.js"></script>
+	<script type="text/javascript" src="./main.js">
+	</script>
+</body>
+
+</html>

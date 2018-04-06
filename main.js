@@ -26,7 +26,7 @@ idIN  = 0;
 yIN	  = 0;
 idOUT = 0;
 yOUT  = 0;
-
+//function that generate position and size of each nodes
 data.nodes.forEach(function(d){
     d["w"] = 4*radius;
     if(d.pos == "center"){
@@ -79,6 +79,7 @@ data.nodes.forEach(function(d){
     }
 });
 
+//Function that generate data for the links used to choose the color and to locate the label on each link
 dictLinksId = {}
 
 data.links.forEach(function(d){
@@ -99,7 +100,7 @@ data.links.forEach(function(d){
 	dictLinksId[d.source.label+d.target.label]=1;
     }
 });
-
+//Function that generate the curved links
 var diagonal = d3.line().curve(d3.curveBundle).x(function(d){return d.x}).y(function(d){return d.y});
 
 var svg = d3.select("body").append("svg")
@@ -110,7 +111,7 @@ idIN  = 1;
 yIN	  = 0;
 idOUT = 1;
 yOUT  = 0;		
-
+//Generation of the links
 var link = svg.append("g")
     .attr("class","link")
     .selectAll("path")
@@ -119,6 +120,7 @@ var link = svg.append("g")
     .attr("id",function(d){return d.id;})
     .attr("class",function(d){return "path"+d.c;})
     .attr("d",function(d){
+	//If you want the links to go in strait line you need to keep only the first and last variable in the path variable
 	x1 = d.source.x+d.source.w;
 	mody1 = 0;
 	if(d.c == "out"){
@@ -167,7 +169,7 @@ var link = svg.append("g")
 	}
 	return diagonal([{"x":x1,"y":y1},{"x":x1+dx,"y":y1},{"x":x2-dx,"y":y2},{"x":x2,"y":y2}])
     });
-
+//Generation of the nodes
 var node = svg.append("g")
     .attr("class","node")
     .selectAll("rect")
@@ -180,6 +182,7 @@ var node = svg.append("g")
     .attr("y",function(d){return d.y})
     .call(d3.drag().on("drag", dragged));
 
+//Generation of the labels on the nodes
 var label = svg.append("g")
     .attr("class","label")
     .selectAll(".label")
@@ -190,18 +193,7 @@ var label = svg.append("g")
     .attr("text-anchor", "middle")
     .text(function(d){return d.label;});
 
-/*var portLabel = svg.append("g")
-    .attr("class","portLabel")
-    .selectAll(".portLabel")
-    .data(data.nodes).enter()
-    .append("text")
-    .append("textPath")
-    .attr("xlink:href", function(d){return "#"+d.id;})
-    .attr("x", function(d){if(d.pos=="in"){return d.x+d.w+4*radius;}else{return d.x-4*radius;}})
-    .attr("y",function(d){return d.y+d.h/3*2;})
-    .attr("text-anchor", "middle")
-    .text(function(d){if(d.port!="None"){return d.port;}});*/
-
+//Generation of the inport labels (entering ports) 
 var inport = svg.append("g")
     .attr("class","inPortLabel")
     .selectAll(".inPortLabel")
@@ -214,6 +206,7 @@ var inport = svg.append("g")
     .attr("startOffset", "10%")
     .text(function(d){return d.inport});
 
+//Generation of the outxport labels (outgoing ports)
 var outport = svg.append("g")
     .attr("class","outPortLabel")
     .selectAll(".outPortLabel")
@@ -226,7 +219,7 @@ var outport = svg.append("g")
     .attr("startOffset", "90%")
     .text(function(d){return d.outport});
 
-
+//Put the label on the links that indicates the number of connection on this links
 var weightLabel = svg.append("g")
     .attr("class","weightLabel")
     .selectAll(".weightLabel")
@@ -239,10 +232,13 @@ var weightLabel = svg.append("g")
     .attr("startOffset", "50%")
     .text(function(d){return d.w;});
 
-
+//Function that manage the movement of the graph
 function dragged(d){
+    //First update the position of the node (dx and dy are the difference between the old and new position)
     d3.select(this).attr("x",function(d){return d.x+=d3.event.dx}).attr("y",function(d){return d.y+=d3.event.dy});
+    //Update the node label position with the new x and y value of the node
     label.filter(function(l){return l===d;}).attr("x",function(d){return d.x+d.w/2;}).attr("y",function(d){if(d.pos=="center"){return d.y+d.h/10*5.4;}else{return d.y+d.h/3*2;}});
+    //Update the link position for the source node with the new x and y value of the node
     link.filter(function(l){return l.source===d}).attr("d",function(d){
 	x1 = d.source.x+d.source.w;
 	if(d.c == "out"){
@@ -266,6 +262,7 @@ function dragged(d){
 	}
 	return diagonal([{"x":x1,"y":y1},{"x":x1+dx,"y":y1},{"x":x2-dx,"y":y2},{"x":x2,"y":y2}])
     });
+    //Update the link position for the target node with the new x and y value of the node
     link.filter(function(l){return l.target===d}).attr("d",function(d){
 	x1 = d.source.x+d.source.w;
 	if(d.c == "out"){
@@ -289,5 +286,6 @@ function dragged(d){
 	}
 	return diagonal([{"x":x1,"y":y1},{"x":x1+dx,"y":y1},{"x":x2-dx,"y":y2},{"x":x2,"y":y2}])
     });
+    //You don't need to update the other labels because they are linked by the id of the link they will update themself
 }
 
